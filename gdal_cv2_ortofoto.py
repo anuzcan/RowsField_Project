@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-#import gdal
+
 import imag_tools
 
 
@@ -9,6 +9,7 @@ fileout = 'Resultados/odm.tif'
 
 raster = imag_tools.raster_read(file)
 raster.show_imagen(10)
+#raster.filter_imagen()
 raster.info()
 
 #hsv = cv2.cvtColor(imagen,cv2.COLOR_BGR2HSV)
@@ -21,7 +22,6 @@ while(True):
 
 #arr = ds.ReadAsArray()
 """
-
 
 h0 = 33
 h1 = 104

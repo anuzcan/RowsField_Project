@@ -1,5 +1,6 @@
 import cv2
 import gdal
+import numpy as np
 
 class raster_read(object):
 	def __init__(self, file):
@@ -29,8 +30,32 @@ class raster_read(object):
 
 		dsize = (width,height)
 
-		raster_imagen = cv2.resize(self.raster_imagen, dsize)
-		cv2.imshow('tif',raster_imagen)
+		raster_imagen_resize = cv2.resize(self.raster_imagen, dsize)
+		cv2.imshow('tif',raster_imagen_resize)
+
+	def filter_imagen(self):
+
+		h0 = 33
+		h1 = 104
+		s0 = 41
+		s1 = 125
+		v0 = 118
+		v1 = 204
+
+		HSVbajo = np.array((h0,s0,v0))
+		HSValto = np.array((h1,s1,v1))
+
+		hsv = cv2.cvtColor(self.raster_imagen,cv2.COLOR_BGR2HSV)
+		mask = cv2.inRange(hsv,HSVbajo,HSValto)
+
+		scale_percent = 10
+
+		width = int(hsv.shape[1] * scale_percent / 100)
+		height = int(hsv.shape[0] * scale_percent / 100)
+		dsize = (width,height)
+
+		raster_imagen_resize = cv2.resize(mask, dsize)
+		cv2.imshow('tif',mask)
 
 	def info(self):
 		print('path archivo: ',self.path)
