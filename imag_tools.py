@@ -23,6 +23,7 @@ class raster_read(object):
 		pixelHeight = -transform[5]			#Alto de la celda en mts
 
 	def show_imagen(self,resize):
+
 		scale_percent = resize
 
 		width = int(self.raster_imagen.shape[1] * scale_percent / 100)
@@ -31,10 +32,36 @@ class raster_read(object):
 		dsize = (width,height)
 
 		raster_imagen_resize = cv2.resize(self.raster_imagen, dsize)
+		
 		cv2.imshow('tif',raster_imagen_resize)
+		
 
-	def filter_imagen(self):
+	def filter_imagen(self,resize):
 
+		self.hsv = cv2.cvtColor(self.raster_imagen,cv2.COLOR_BGR2HSV)
+
+		scale_percent = resize
+
+		width = int(self.raster_imagen.shape[1] * scale_percent / 100)
+		height = int(self.raster_imagen.shape[0] * scale_percent / 100)
+
+		dsize = (width,height)
+
+		raster_imagen_hsv_resize = cv2.resize(self.hsv, dsize)
+		cv2.imshow('hsv',raster_imagen_hsv_resize)
+
+	def save_imagen(self,path):
+
+		cv2.imwrite(path,self.hsv)
+
+	def info(self):
+		print('path archivo: ',self.path)
+		print('raster tipo: ', self.raster_imagen.dtype)
+		print('Dimensiones: ',self.dimensiones)
+		print('Proyeccion: ',self.raster_ds.GetProjection())
+		print('Coordenadas Origen',self.raster_ds.GetGeoTransform())
+
+"""
 		h0 = 33
 		h1 = 104
 		s0 = 41
@@ -56,13 +83,7 @@ class raster_read(object):
 
 		raster_imagen_resize = cv2.resize(mask, dsize)
 		cv2.imshow('tif',mask)
-
-	def info(self):
-		print('path archivo: ',self.path)
-		print('raster tipo: ', self.raster_imagen.dtype)
-		print('Dimensiones: ',self.dimensiones)
-		print('Proyeccion: ',self.raster_ds.GetProjection())
-		print('Coordenadas Origen',self.raster_ds.GetGeoTransform())
+"""
 
 
 		

@@ -9,10 +9,10 @@ fileout = 'Resultados/odm.tif'
 
 raster = imag_tools.raster_read(file)
 raster.show_imagen(10)
-#raster.filter_imagen()
+raster.filter_imagen(10)
 raster.info()
+raster.save_imagen(fileout)
 
-#hsv = cv2.cvtColor(imagen,cv2.COLOR_BGR2HSV)
 
 while(True):
 
