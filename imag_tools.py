@@ -9,7 +9,23 @@ class raster_read(object):
 	def show_imagen(self,resize):
 
 		raster_imagen_resize = self.resize(self.raster_imagen, resize)
-		cv2.imshow('tif',raster_imagen_resize)
+		cv2.imshow('Origen',raster_imagen_resize)
+
+	def contras(self):
+
+		raster_imagen_resize = self.resize(self.raster_imagen, 10)
+
+		alpha = 1.5 #Enter the alpha value [1.0-3.0]     
+		beta = 50 #Enter the beta value [0-100]
+
+		new_image = np.zeros(raster_imagen_resize.shape, raster_imagen_resize.dtype)
+
+		for y in range(raster_imagen_resize.shape[0]):
+			for x in range(raster_imagen_resize.shape[1]):
+				for c in range(raster_imagen_resize.shape[2]):
+					new_image[y,x,c] = np.clip(alpha*raster_imagen_resize[y,x,c] + beta, 0, 255)
+
+		cv2.imshow('contraste',new_image)
 
 	def filter_imagen(self,resize):
 
