@@ -5,33 +5,39 @@ class raster_read(object):
 	def __init__(self, file):
 		self.path = file
 		self.raster_imagen = cv2.imread(self.path,cv2.IMREAD_COLOR)
+		self.raster_origen = self.raster_imagen
 
-	def show_imagen(self,resize):
+	def show_imagen(self):
 
-		raster_imagen_resize = self.resize(self.raster_imagen, resize)
-		cv2.imshow('Origen',raster_imagen_resize)
+		cv2.imshow('tif',self.raster_imagen)
 
-	def contras(self):
+	def resize(self,resize):
+		scale_percent = resize
+		width = int(self.raster_imagen.shape[1] * scale_percent / 100)
+		height = int(self.raster_imagen.shape[0] * scale_percent / 100)
+		dsize = (width,height)
+		self.raster_imagen = cv2.resize(self.raster_imagen, dsize)
 
-		raster_imagen_resize = self.resize(self.raster_imagen, 10)
 
-		alpha = 1.5 #Enter the alpha value [1.0-3.0]     
+	def procesar(self,alpha = 0):
+
+		# (0 < alpha < 1) Menor Contraste; (alpha > 1) Mayor Contraste; (alpha = 1) Sin Cambios      
 		beta = 50 #Enter the beta value [0-100]
 
-		new_image = np.zeros(raster_imagen_resize.shape, raster_imagen_resize.dtype)
+		b,g,r = cv2.split(self.raster_imagen)
+		gscale = 2*g-r-b
+		self.img_detection = cv2.Canny(gscale,280,290,apertureSize = 3) 
 
-		for y in range(raster_imagen_resize.shape[0]):
-			for x in range(raster_imagen_resize.shape[1]):
-				for c in range(raster_imagen_resize.shape[2]):
-					new_image[y,x,c] = np.clip(alpha*raster_imagen_resize[y,x,c] + beta, 0, 255)
+		#self.img_detection = cv2.addWeighted(self.raster_imagen, alpha, np.zeros(self.raster_imagen.shape, self.raster_imagen.dtype), 0, 0)
+		#self.img_detection = cv2.cvtColor(self.img_detection, cv2.COLOR_BGR2GRAY)
+		cv2.imshow('Proceso',gscale)
 
-		cv2.imshow('contraste',new_image)
 
-	def filter_imagen(self,resize):
+	def filter_imagen(self):
 
 		self.hsv = cv2.cvtColor(self.raster_imagen,cv2.COLOR_BGR2HSV)
-		raster_imagen_hsv_resize = self.resize(self.hsv,resize)
-		cv2.imshow('hsv',raster_imagen_hsv_resize)
+		
+		cv2.imshow('hsv',self.hsv)
 
 		h0 = 33
 		h1 = 104
@@ -49,14 +55,9 @@ class raster_read(object):
 	def save_imagen(self,path):
 
 		#cv2.imwrite(path,self.hsv)
-		cv2.imwrite(path,self.mask)
+		cv2.imwrite(path,self.contrast_img)
 
-	def resize(self,file,resize):
-		scale_percent = resize
-		width = int(self.raster_imagen.shape[1] * scale_percent / 100)
-		height = int(self.raster_imagen.shape[0] * scale_percent / 100)
-		dsize = (width,height)
-		return cv2.resize(file, dsize)
+	
 
 	def info(self):
 		print('path archivo: ',self.path)

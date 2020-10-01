@@ -30,34 +30,24 @@ class raster_load(object):
 		print('Proyeccion: ',self.raster_ds.GetProjection())
 		print('Coordenadas Origen',self.raster_ds.GetGeoTransform())
 
-		"""
+	def new_tif(self):
 
-		band1 = ds.GetRasterBand(1)
-		band2 = ds.GetRasterBand(2)
-		band3 = ds.GetRasterBand(3)
-
+		band1 = self.raster_ds.GetRasterBand(4)
 		arr_band1 = band1.ReadAsArray()
-		arr_band2 = band2.ReadAsArray()
-		arr_band3 = band3.ReadAsArray()
-
 		[cols, rows] = arr_band1.shape
-		arr_min = arr.min()
-		arr_max = arr.max()
-		arr_mean = int(arr.mean())
-
-		#arr_out = np.where((arr < arr_mean), 10000, arr)
+		print(arr_band1.shape)
 
 		driver = gdal.GetDriverByName("GTiff")
-		outdata = driver.Create(fileout, rows, cols, 1, gdal.GDT_UInt16)
-		outdata.SetGeoTransform(ds.GetGeoTransform())##sets same geotransform as input
-		outdata.SetProjection(ds.GetProjection())##sets same projection as input
+		outdata = driver.Create('Resultados/raster_ban4.tif', rows, cols, 1, gdal.GDT_UInt16)
+		outdata.SetGeoTransform(self.raster_ds.GetGeoTransform())##sets same geotransform as input
+		outdata.SetProjection(self.raster_ds.GetProjection())##sets same projection as input
 
-		outdata.GetRasterBand(1).WriteArray(mask)
+		outdata.GetRasterBand(1).WriteArray(arr_band1)
 		outdata.GetRasterBand(1).SetNoDataValue(0)##if you want these values transparent transparent
 
 		outdata.FlushCache() ##saves to disk!!
-		outdata = None
-		band=None
-		ds=None
 
-		"""
+		#banda 1 = Rojo
+		#Banda 2 = Verde
+		#Banda 3 = Azul
+		#Banda 4 = Alpha
