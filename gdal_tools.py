@@ -32,13 +32,13 @@ class raster_load(object):
 
 	def new_tif(self):
 
-		band1 = self.raster_ds.GetRasterBand(4)
+		band1 = self.raster_ds.GetRasterBand(1)
 		arr_band1 = band1.ReadAsArray()
 		[cols, rows] = arr_band1.shape
 		print(arr_band1.shape)
 
 		driver = gdal.GetDriverByName("GTiff")
-		outdata = driver.Create('Resultados/raster_ban4.tif', rows, cols, 1, gdal.GDT_UInt16)
+		outdata = driver.Create('Resultados/raster_ban.tif', rows, cols, 1, gdal.GDT_UInt16)
 		outdata.SetGeoTransform(self.raster_ds.GetGeoTransform())##sets same geotransform as input
 		outdata.SetProjection(self.raster_ds.GetProjection())##sets same projection as input
 
